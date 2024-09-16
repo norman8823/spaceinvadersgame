@@ -140,4 +140,16 @@ moveDown(newDirection) {
   collideWith(sprite) {
     return this.enemyRows.flat().some((enemy => enemy.collideWith(sprite)))
   }
+    reset() {
+        // Reset enemy variables
+        this.enemyRows = [];
+        this.currentDirection = MovingDirection.right;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.moveDownTimer = this.moveDownTimerDefault;
+        this.fireBulletTimer = this.fireBulletTimerDefault;
+
+        // Recreate enemies
+        this.createEnemies();
+    }
 }
