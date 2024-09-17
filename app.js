@@ -16,8 +16,8 @@ const background = new Image();
 background.src = "./files/images/space.png";
 
 // Create bullet controllers for the player and the enemies, which manages the bullets fired
-const playerBulletController = new BulletController(canvas, 10,"red", true) 
-const enemyBulletController = new BulletController(canvas, 10, "white", false);
+const playerBulletController = new BulletController(canvas, 10,"red", true,'./files/sounds/shoot.wav') 
+const enemyBulletController = new BulletController(canvas, 10, "white", false,'./files/sounds/enemy-shoot.wav');
 // Create an instance of EnemyController to manage enemies, pass canvas and bullet controllers as arguments
 const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController);
 // Create instance of Player class with specified velocity
@@ -32,6 +32,18 @@ let gameOverSoundPlayed = false;
 // Load the game over sound
 const gameOverSound = new Audio('./files/sounds/game-over.mp3');
 gameOverSound.volume = 1;
+
+// Load the win sound
+const winSound = new Audio('./files/sounds/winner.ogg');
+winSound.volume = 1;
+
+// Load the game start sound
+const gameStartSound = new Audio('./files/sounds/game-start.mp3');
+gameStartSound.volume = 1;
+
+// Load the shooting sounds
+const playerShootSoundSrc = "./files/sounds/shoot.wav";
+const enemyShootSoundSrc = "./files/sounds/enemy-shoot.wav";
 
 // Get the DOM elements
 const startButton = document.getElementById('startButton');
@@ -59,19 +71,26 @@ function game() {
     }
 }
 
-// Function to start the game when the "Start Game" button is clicked
+//Start the game when the "Start Game" button is clicked
 function startGame() {
+    gameStartSound.currentTime = 0;
+    gameStartSound.play();
     homeScreen.style.display = 'none';  //Hide the home screen
     gameContainer.style.display = 'block';  //Show the game container
     isGameStarted = true;   //Set the game started flag to true
 }
 
-//Function to detect "Game Over" or "You Win" depending on outcome
+//Detect "Game Over" or "You Win" depending on outcome
 function displayGameOver(){
     if (isGameOver) {
         if (!gameOverSoundPlayed) {
+            if (didWin) {
+                winSound.currentTime = 0;
+                winSound.play();
+            } else {
             gameOverSound.currentTime = 0; // Reset sound to start
             gameOverSound.play(); //play game over sound
+            }
             gameOverSoundPlayed = true; // Set flag to prevent replay
         }
         let text = didWin ? "You Win" : "Game Over";
@@ -87,7 +106,7 @@ function displayGameOver(){
     }
 }
 
-//Function to check if game has ended
+//Check if game has ended
 function checkGameOver(){
     if(isGameOver) {
         return;
