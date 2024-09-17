@@ -26,13 +26,27 @@ const player = new Player(canvas,4, playerBulletController);
 //Variables to keep track of game state, default to false
 let isGameOver = false;
 let didWin = false;
+let isGameStarted = false;
 
-// Get the restart button element
+// Load the game over sound
+const gameOverSound = new Audio('./files/sounds/game-over.wav');
+gameOverSound.volume = 0.5;
+
+// Get the DOM elements
+const startButton = document.getElementById('startButton');
 const restartButton = document.getElementById('restartButton');
+const homeScreen = document.getElementById('homeScreen');
+const gameContainer = document.getElementById('gameContainer');
+
+//Event Listenters
+startButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', restartGame);
 
 //Main game function that updates the game state
 function game() {
+    if (!isGameStarted) {
+        return; // Do nothing if the game hasn't started
+    }
     checkGameOver(); //check if game is over
     ctx.drawImage(background,0,0, canvas.width, canvas.height); //effectively clears the canvas
     displayGameOver(); //if game is over, display game over message, if not over, continue game
@@ -42,6 +56,13 @@ function game() {
     playerBulletController.draw(ctx);
     enemyBulletController.draw(ctx);
     }
+}
+
+// Function to start the game when the "Start Game" button is clicked
+function startGame() {
+    homeScreen.style.display = 'none';  //Hide the home screen
+    gameContainer.style.display = 'block';  //Show the game container
+    isGameStarted = true;   //Set the game started flag to true
 }
 
 //Function to detect "Game Over" or "You Win" depending on outcome
