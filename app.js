@@ -27,10 +27,11 @@ const player = new Player(canvas,4, playerBulletController);
 let isGameOver = false;
 let didWin = false;
 let isGameStarted = false;
+let gameOverSoundPlayed = false;
 
 // Load the game over sound
-const gameOverSound = new Audio('./files/sounds/game-over.wav');
-gameOverSound.volume = 0.5;
+const gameOverSound = new Audio('./files/sounds/game-over.mp3');
+gameOverSound.volume = 1;
 
 // Get the DOM elements
 const startButton = document.getElementById('startButton');
@@ -68,6 +69,11 @@ function startGame() {
 //Function to detect "Game Over" or "You Win" depending on outcome
 function displayGameOver(){
     if (isGameOver) {
+        if (!gameOverSoundPlayed) {
+            gameOverSound.currentTime = 0; // Reset sound to start
+            gameOverSound.play(); //play game over sound
+            gameOverSoundPlayed = true; // Set flag to prevent replay
+        }
         let text = didWin ? "You Win" : "Game Over";
         ctx.fillStyle = didWin ? "white" : "red";
         ctx.font = "48px 'Press Start 2P', sans-serif";
@@ -108,6 +114,7 @@ function restartGame() {
     // Reset game state variables
     isGameOver = false;
     didWin = false;
+    gameOverSoundPlayed = false;
 
     // Reinitialize game objects
     player.x = canvas.width / 2;

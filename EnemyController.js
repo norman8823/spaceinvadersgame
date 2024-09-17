@@ -42,13 +42,17 @@ export default class EnemyController {
   }
   //Method to handle collision detection between enemies and player bullets
   collisionDetection() {
-    this.enemyRows.forEach(enemyRow=>{  //loop through each row of enemies
+    this.enemyRows.forEach(enemyRow => {  //loop through each row of enemies
       enemyRow.forEach((enemy,enemyIndex)=>{ //loop through each enemy in the row
         if(this.playerBulletController.collideWith(enemy)){ //check if enemy is hit
           this.enemyDeathSound.currentTime = 0; 
           this.enemyDeathSound.play();  //play enemy death sound
-          enemyRow.splice(enemyIndex,1);  //remove enemy from the row
+          enemy.health--;    //decrement enemy health
+          if (enemy.health <= 0) {
+            enemyRow.splice(enemyIndex, 1); //remove enemy if health reaches zero
         }
+        this.playerBulletController.removeBullet(enemy);  //remove bullet after impact
+      }
       });
     });
     //remove empty rows from the array

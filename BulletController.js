@@ -26,7 +26,11 @@ export default class BulletController {
             this.timeTillNextBulletAllowed--;
         }
     }
-
+// Method to remove bullet
+removeBullet(bulletSprite) {
+    this.bullets = this.bullets.filter(
+        (bullet) => !bullet.collideWith(bulletSprite));
+    }
 //Find index of the colliding bullet in the bullets array
     collideWith(sprite) {
         const bulletThatHitSpriteIndex = this.bullets.findIndex((bullet) =>
@@ -37,7 +41,6 @@ export default class BulletController {
         this.bullets.splice(bulletThatHitSpriteIndex, 1);
         return true;
     }
-
     return false;
 }
 //Creates a new bullet and adds it to the bullets array

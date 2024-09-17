@@ -26,9 +26,9 @@ h1 {
 }
 
 #homeImage {
-    max-width: 80%; /* Adjust as needed */
+    max-width: 50%; /* Adjust as needed */
     height: auto;
-    margin-bottom: 50px; /* Set margin-bottom to 50px */
+    margin-bottom: 100px; /* Set margin-bottom to 50px */
 }
 
 #startButton {
@@ -36,10 +36,10 @@ h1 {
     font-size: 24px;
     cursor: pointer;
     font-family: 'Press Start 2P', sans-serif;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.90);
     color: black;
     border: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 #startButton:hover {
@@ -50,16 +50,13 @@ h1 {
 /* Hide the game container initially */
 #gameContainer {
     display: none;
-}
-
-#gameContainer {
-    padding: 100px
     position: relative;
+    margin-top: 50px
 }
 
 canvas {
   box-shadow: black 20px 10px 50px;
-  border: 1px solid white
+  border: 1px solid white;
 }
 
 #restartButton {
