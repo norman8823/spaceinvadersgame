@@ -16,12 +16,12 @@ const background = new Image();
 background.src = "./files/images/space.png";
 
 // Create bullet controllers for the player and the enemies, which manages the bullets fired
-const playerBulletController = new BulletController(canvas, 5,"red", true) 
+const playerBulletController = new BulletController(canvas, 10,"red", true) 
 const enemyBulletController = new BulletController(canvas, 10, "white", false);
 // Create an instance of EnemyController to manage enemies, pass canvas and bullet controllers as arguments
 const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController);
-// Create instance of Player class
-const player = new Player(canvas,3, playerBulletController); 
+// Create instance of Player class with specified velocity
+const player = new Player(canvas,4, playerBulletController); 
 
 //Variables to keep track of game state, default to false
 let isGameOver = false;

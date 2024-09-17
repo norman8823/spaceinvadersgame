@@ -1,13 +1,16 @@
-export default class Player {
+//Export Player class 
+export default class Player {  //initialize control flags to track key press
   rightPressed = false;
   leftPressed = false;
   shootPressed = false;
 
+  //Constructor to initialize player object with canvas, velocity, and bullet controller
   constructor(canvas, velocity, bulletController) {
     this.canvas = canvas;
     this.velocity = velocity;
     this.bulletController = bulletController
 
+  //Set initial position of player at the bottom center of canvas
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height - 75;
     this.width = 50;
@@ -15,14 +18,20 @@ export default class Player {
     this.image = new Image();
     this.image.src = `./files/images/player.png`;
 
+    //Event listeners for keydown and keyup events
     document.addEventListener("keydown", this.keydown);
     document.addEventListener("keyup", this.keyup);
   }
 
   draw(ctx) {
-        if(this.shootPressed){
-            this.bulletController.shoot(this.x + this.width/2, this.y, 4, 10);
-        } //fire bullet if shootPressed is true
+        if(this.shootPressed){ //fire bullet if shootPressed = true
+            this.bulletController.shoot(
+              this.x + this.width/2, 
+              this.y, 
+              4,      //bullet velocity
+              10      //time until next bullet
+            );
+        } 
     this.move();
     this.collideWithWalls();
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height); //draw Player

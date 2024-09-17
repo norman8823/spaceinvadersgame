@@ -27,12 +27,12 @@ export default class BulletController {
         }
     }
 
-
+//Find index of the colliding bullet in the bullets array
     collideWith(sprite) {
         const bulletThatHitSpriteIndex = this.bullets.findIndex((bullet) =>
             bullet.collideWith(sprite)
     );
-
+//If collision is detected, remove the bullet at the specified index
     if(bulletThatHitSpriteIndex >=0){
         this.bullets.splice(bulletThatHitSpriteIndex, 1);
         return true;
@@ -40,8 +40,8 @@ export default class BulletController {
 
     return false;
 }
-
-    shoot(x, y, velocity, timeTillNextBulletAllowed = 0) {
+//Creates a new bullet and adds it to the bullets array
+    shoot(x, y, velocity, timeTillNextBulletAllowed = 0.5) {
         if(this.timeTillNextBulletAllowed <=0 && this.bullets.length < this.maxBulletsAtATime)
         {
         const bullet = new Bullet(this.canvas,x,y,velocity,this.bulletColor)
@@ -54,3 +54,4 @@ export default class BulletController {
         }
     }
 }
+

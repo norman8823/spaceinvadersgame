@@ -1,75 +1,78 @@
+// Import the Enemy and MovingDirection from their respective modules 
 import Enemy from "./Enemy.js";
 import MovingDirection from "./MovingDirection.js";
 
 export default class EnemyController {
-  enemyMap = [
+  enemyMap = [ //Map representing the layout of enemies, number represent enemy type
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [2, 2, 2, 3, 3, 3, 3, 2, 2, 2],
     [2, 2, 2, 3, 3, 3, 3, 2, 2, 2],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   ];
-  enemyRows = [];
+  enemyRows = []; //Array to hold arrays of enemy objects for each row
 
   currentDirection = MovingDirection.right;
   xVelocity = 0;
   yVelocity = 0;
   defaultXVelocity = 1;
   defaultYVelocity = 1;
-  moveDownTimerDefault = 30;
+  moveDownTimerDefault = 30; //Amount of enemy movement downwards
   moveDownTimer = this.moveDownTimerDefault;
-  fireBulletTimerDefault = 100;
+  fireBulletTimerDefault = 100; //Speed of enemy fire (time between bullets)
   fireBulletTimer = this.fireBulletTimerDefault;
 
+  //Initialize EnemyController with canvas and bullet controllers
   constructor(canvas, enemyBulletController, playerBulletController) {
     this.canvas = canvas;
     this.enemyBulletController = enemyBulletController;
     this.playerBulletController = playerBulletController;
-    this.enemyDeathSound = new Audio('./files/sounds/enemy-death.wav');
-    this.enemyDeathSound.volume = .5
+    this.enemyDeathSound = new Audio('./files/sounds/enemy-death.wav'); //load enemy death sound effect
+    this.enemyDeathSound.volume = .5 //half volume
     this.createEnemies();
   }
-  
+  //Method to update and draw enemies on each frame
   draw(ctx) {
-    this.decrementMoveDownTimer();
-    this.updateVelocityAndDirection();
+    this.decrementMoveDownTimer(); 
+    this.updateVelocityAndDirection(); 
     this.collisionDetection()
     this.drawEnemies(ctx);
     this.resetMoveDownTimer();
     this.fireBullet();
   }
-
+  //Method to handle collision detection between enemies and player bullets
   collisionDetection() {
-    this.enemyRows.forEach(enemyRow=>{
-      enemyRow.forEach((enemy,enemyIndex)=>{
-        if(this.playerBulletController.collideWith(enemy)){
-          this.enemyDeathSound.currentTime = 0;
-          this.enemyDeathSound.play();
-          enemyRow.splice(enemyIndex,1);
+    this.enemyRows.forEach(enemyRow=>{  //loop through each row of enemies
+      enemyRow.forEach((enemy,enemyIndex)=>{ //loop through each enemy in the row
+        if(this.playerBulletController.collideWith(enemy)){ //check if enemy is hit
+          this.enemyDeathSound.currentTime = 0; 
+          this.enemyDeathSound.play();  //play enemy death sound
+          enemyRow.splice(enemyIndex,1);  //remove enemy from the row
         }
       });
     });
-
+    //remove empty rows from the array
     this.enemyRows = this.enemyRows.filter(enemyRow=>enemyRow.length > 0);
   }
+  //Method for enemy bullet firing logic
   fireBullet(){
-    this.fireBulletTimer--;
+    this.fireBulletTimer--; //Decrement the bullet firing timer
     if(this.fireBulletTimer <=0) {
       this.fireBulletTimer = this.fireBulletTimerDefault;
       const allEnemies = this.enemyRows.flat();
-      const enemyIndex = Math.floor(Math.random() * allEnemies.length);
+      const enemyIndex = Math.floor(Math.random() * allEnemies.length); //fire bullet from random enemy 
       const enemy = allEnemies[enemyIndex];
       this.enemyBulletController.shoot(enemy.x + enemy.width/2-2.5,enemy.y,-3); //enemy fires bullet
       console.log(enemyIndex);
     }
   }
-
+  //reset move down timer if it reaches zero
   resetMoveDownTimer(){
-
     if(this.moveDownTimer <= 0) {
       this.moveDownTimer = this.moveDownTimerDefault;
     }
   }
+  //decrement move down timer when enemies moving down
   decrementMoveDownTimer(){
     if(
       this.currentDirection === MovingDirection.downLeft ||
@@ -78,18 +81,18 @@ export default class EnemyController {
       this.moveDownTimer--;
     }
   }
-
+  //method to update velocity and direction based on enemy positions
   updateVelocityAndDirection() {
-    for(const  enemyRow of this.enemyRows){
-      if(this.currentDirection == MovingDirection.right) {
+    for(const  enemyRow of this.enemyRows){ //loop through each row of enemies
+      if(this.currentDirection == MovingDirection.right) { //if moving right, vertical velocity zero
         this.xVelocity = this.defaultXVelocity;
         this.yVelocity = 0;
-        const rightMostEnemy = enemyRow[enemyRow.length -1];
+        const rightMostEnemy = enemyRow[enemyRow.length -1]; //check if right most enemy has reached edge of canvas
         if(rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width){
-          this.currentDirection = MovingDirection.downLeft;
+          this.currentDirection = MovingDirection.downLeft; //change direction to move down then left
           break;
         }
-      } else if(this.currentDirection === MovingDirection.downLeft){
+      } else if(this.currentDirection === MovingDirection.downLeft){  //if moving down after reaching right edge
         if(this.moveDown(MovingDirection.left)) {
           break;
         }
@@ -108,7 +111,7 @@ export default class EnemyController {
       }
     }
   }
-
+//Method for moving enemies down and changing direction
 moveDown(newDirection) {
     this.xVelocity = 0;
     this.yVelocity = this.defaultYVelocity;
@@ -118,12 +121,14 @@ moveDown(newDirection) {
     }
     return false;
 }
+  //Method to move and draw enemies on canvas
   drawEnemies(ctx) {
     this.enemyRows.flat().forEach((enemy) => {
       enemy.move(this.xVelocity, this.yVelocity);
       enemy.draw(ctx);
     });
   }
+  //Method to create enemies based on enemyMap
   createEnemies() {
     this.enemyMap.forEach((row, rowIndex) => {
       this.enemyRows[rowIndex] = [];
@@ -136,7 +141,7 @@ moveDown(newDirection) {
       })
     });
   }
-
+//Check for collision with any enemy
   collideWith(sprite) {
     return this.enemyRows.flat().some((enemy => enemy.collideWith(sprite)))
   }
