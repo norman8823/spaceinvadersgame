@@ -16,8 +16,8 @@ const background = new Image();
 background.src = "./files/images/space.png";
 
 // Create bullet controllers for the player and the enemies, which manages the bullets fired
-const playerBulletController = new BulletController(canvas, 10,"red", true,'./files/sounds/shoot.wav') 
-const enemyBulletController = new BulletController(canvas, 10, "white", false,'./files/sounds/enemy-shoot.wav');
+const playerBulletController = new BulletController(canvas, 10,"red", true,'./files/sounds/shoot.wav'); 
+const enemyBulletController = new BulletController(canvas, 10, "white", true,'./files/sounds/enemy-shoot.wav');
 // Create an instance of EnemyController to manage enemies, pass canvas and bullet controllers as arguments
 const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController);
 // Create instance of Player class with specified velocity
@@ -111,19 +111,21 @@ function checkGameOver(){
     if(isGameOver) {
         return;
     } 
-//Check if player has been hit by enemy bullet 
+    //Check if player has been hit by enemy bullet 
     if (enemyBulletController.collideWith(player)) {
         isGameOver = true;
     }
-//Check if enemey has collided with player
+    //Check if enemey has collided with player
     if(enemyController.collideWith(player)) {
         isGameOver = true;
     }
-//Check if all enemies have been eliminated
+    //Check if all enemies have been eliminated
     if(enemyController.enemyRows.length === 0 ) {
+        //spawn the boss here
+
         didWin = true;
         isGameOver = true;
-    }
+    } 
 }
 // Function to restart the game
 function restartGame() {

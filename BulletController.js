@@ -15,7 +15,7 @@ export default class BulletController {
         
         if (soundEnabled) {
         this.shootSound = new Audio(shootSoundSrc) // Create a new Audio object for the shooting sound effect
-        this.shootSound.volume = 0.5;    // Set the volume of the shooting sound effect to 50%
+        this.shootSound.volume = .25;    // Set the volume of the shooting sound effect
     }
 }
   // Method to update and draw all bullets managed by this controller
@@ -46,17 +46,20 @@ removeBullet(bulletSprite) {
     return false;
 }
 //Creates a new bullet and adds it to the bullets array
-    shoot(x, y, velocity, timeTillNextBulletAllowed = 0.5) {
+    shoot(x, y, velocity, timeTillNextBulletAllowed = 0) {
         if(this.timeTillNextBulletAllowed <=0 && this.bullets.length < this.maxBulletsAtATime)
         {
         const bullet = new Bullet(this.canvas,x,y,velocity,this.bulletColor)
         this.bullets.push(bullet);
-        if(this.soundEnabled){
+
+        if(this.soundEnabled && this.shootSound){
             this.shootSound.currentTime = 0;
             this.shootSound.play();
         }
         this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
         }
+        console.log('Enemy shooting sound should play now');
+
     }
 }
 

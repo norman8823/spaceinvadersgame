@@ -27,8 +27,10 @@ export default class EnemyController {
     this.canvas = canvas;
     this.enemyBulletController = enemyBulletController;
     this.playerBulletController = playerBulletController;
-    this.enemyDeathSound = new Audio('./files/sounds/enemy-death.wav'); //load enemy death sound effect
-    this.enemyDeathSound.volume = .5 //half volume
+    this.enemyHitSound = new Audio('./files/sounds/enemy-hit.ogg');
+    this.enemyHitSound.volume = 1 // half volume
+    this.enemyDeathSound = new Audio('./files/sounds/enemy-death.ogg'); //load enemy death sound effect
+    this.enemyDeathSound.volume = 1 //full volume
     this.createEnemies();
   }
   //Method to update and draw enemies on each frame
@@ -45,14 +47,19 @@ export default class EnemyController {
     this.enemyRows.forEach(enemyRow => {  //loop through each row of enemies
       enemyRow.forEach((enemy,enemyIndex)=>{ //loop through each enemy in the row
         if(this.playerBulletController.collideWith(enemy)){ //check if enemy is hit
-          this.enemyDeathSound.currentTime = 0; 
-          this.enemyDeathSound.play();  //play enemy death sound
           enemy.health--;    //decrement enemy health
+
           if (enemy.health <= 0) {
+            this.enemyDeathSound.currentTime = 0; 
+            this.enemyDeathSound.play();  //play enemy death sound
             enemyRow.splice(enemyIndex, 1); //remove enemy if health reaches zero
+          } else {
+            //change enemy color to reflect reduced health
+            this.enemyHitSound.play()
+            enemy.image.src = `./files/images/enemy${enemy.health}.png`
+          }
+          this.playerBulletController.removeBullet(enemy);  //remove bullet after impact
         }
-        this.playerBulletController.removeBullet(enemy);  //remove bullet after impact
-      }
       });
     });
     //remove empty rows from the array
