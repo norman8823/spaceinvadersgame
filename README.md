@@ -33,6 +33,12 @@
 - Enemy is shooting from random position
 - bullets travel from top to bottom
 
+**Enemy Health**
+- Each enemy has a different health value depending on its type (1, 2, or 3).
+- Enemy health is reduced by 1 each time it gets hit by a player bullet. When health reaches 0, the enemy is removed from the game.
+- When the enemy's health decreases, its image changes to reflect the remaining health.
+- Two sound effects are triggered: one when the enemy is hit and another when the enemy dies.
+
 **Collision Detection**
 - loop through enemy rows to detect if there are any collisions between enemy and bullet
 - use splice method to remove enemy from the row using the index of the hit enemy

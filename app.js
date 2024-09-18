@@ -2,7 +2,9 @@
 import EnemyController from "./EnemyController.js";
 import Player from "./Player.js";
 import BulletController from "./BulletController.js";
-import Bullet from "./Bullet.js";
+import BossController from "./BossController.js"
+
+let bossController = null; //initialize variable name with camelCase
 
 //get canvas element from HTML document 
 const canvas = document.getElementById("game");
@@ -29,19 +31,13 @@ let didWin = false;
 let isGameStarted = false;
 let gameOverSoundPlayed = false;
 
-// Load the game over sound
+// Load sounds
 const gameOverSound = new Audio('./files/sounds/game-over.mp3');
 gameOverSound.volume = 1;
-
-// Load the win sound
 const winSound = new Audio('./files/sounds/winner.ogg');
 winSound.volume = 1;
-
-// Load the game start sound
 const gameStartSound = new Audio('./files/sounds/game-start.mp3');
 gameStartSound.volume = 1;
-
-// Load the shooting sounds
 const playerShootSoundSrc = "./files/sounds/shoot.wav";
 const enemyShootSoundSrc = "./files/sounds/enemy-shoot.wav";
 
@@ -57,18 +53,23 @@ restartButton.addEventListener('click', restartGame);
 
 //Main game function that updates the game state
 function game() {
-    if (!isGameStarted) {
-        return; // Do nothing if the game hasn't started
-    }
+    if (!isGameStarted) return; // Do nothing if the game hasn't started
+    
     checkGameOver(); //check if game is over
     ctx.drawImage(background,0,0, canvas.width, canvas.height); //effectively clears the canvas
-    displayGameOver(); //if game is over, display game over message, if not over, continue game
+    
     if(!isGameOver){
-    enemyController.draw(ctx);
-    player.draw(ctx);
-    playerBulletController.draw(ctx);
-    enemyBulletController.draw(ctx);
+    enemyController.draw(ctx); //draw enemies
+    player.draw(ctx);          //draw player
+    playerBulletController.draw(ctx);  //draw player bullets
+    enemyBulletController.draw(ctx);   //draw enemy bullets
+
+    if (bossController) {
+        bossController.draw(ctx); // Draw and manage boss
     }
+    
+}
+displayGameOver();
 }
 
 //Start the game when the "Start Game" button is clicked
@@ -97,7 +98,7 @@ function displayGameOver(){
         ctx.fillStyle = didWin ? "white" : "red";
         ctx.font = "48px 'Press Start 2P', sans-serif";
         const textWidth = ctx.measureText(text).width;
-        const xPosition = (canvas.width - textWidth) /2;
+        const xPosition = (canvas.width - textWidth) / 2;
         const yPosition = canvas.height / 2;
         ctx.fillText(text, xPosition, yPosition);
         restartButton.style.display = 'block';
@@ -108,25 +109,34 @@ function displayGameOver(){
 
 //Check if game has ended
 function checkGameOver(){
-    if(isGameOver) {
-        return;
+    if(isGameOver) return;
+    //if no enemies are left, initialize the boss
+    if (enemyController.enemyRows.length === 0 && !bossController) {
+        bossController = new BossController(canvas, enemyBulletController, playerBulletController); // Initialize bossController
     } 
+
+    //Check if player collided with boss
+    if (bossController && bossController.bossObject.collideWith(player)) {
+        isGameOver = true;
+    }
+
+    // Check if boss is defeated
+    if (bossController && bossController.bossObject.isDefeated()) {
+    didWin = true;
+    isGameOver = true;
+    }
+
     //Check if player has been hit by enemy bullet 
     if (enemyBulletController.collideWith(player)) {
         isGameOver = true;
     }
-    //Check if enemey has collided with player
+
+    //Check if enemy has collided with player
     if(enemyController.collideWith(player)) {
         isGameOver = true;
     }
-    //Check if all enemies have been eliminated
-    if(enemyController.enemyRows.length === 0 ) {
-        //spawn the boss here
-
-        didWin = true;
-        isGameOver = true;
-    } 
 }
+
 // Function to restart the game
 function restartGame() {
     // Hide the restart button
@@ -136,11 +146,11 @@ function restartGame() {
     isGameOver = false;
     didWin = false;
     gameOverSoundPlayed = false;
+    bossController = null;
 
     // Reinitialize game objects
     player.x = canvas.width / 2;
     player.y = canvas.height - 75;
-    player.isHit = false;
 
     // Clear bullets from controllers
     playerBulletController.bullets = [];

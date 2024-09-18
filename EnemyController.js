@@ -4,9 +4,9 @@ import MovingDirection from "./MovingDirection.js";
 
 export default class EnemyController {
   enemyMap = [ //Map representing the layout of enemies, number represent enemy type
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     [2, 2, 2, 3, 3, 3, 3, 2, 2, 2],
+    [1, 1, 1, 3, 3, 3, 3, 1, 1, 1],
     [2, 2, 2, 3, 3, 3, 3, 2, 2, 2],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   ];
@@ -19,7 +19,7 @@ export default class EnemyController {
   defaultYVelocity = 1;
   moveDownTimerDefault = 30; //Amount of enemy movement downwards
   moveDownTimer = this.moveDownTimerDefault;
-  fireBulletTimerDefault = 100; //Speed of enemy fire (time between bullets)
+  fireBulletTimerDefault = 50; //Speed of enemy fire (time between bullets)
   fireBulletTimer = this.fireBulletTimerDefault;
 
   //Initialize EnemyController with canvas and bullet controllers

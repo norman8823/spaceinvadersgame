@@ -29,9 +29,9 @@ export default class BulletController {
         }
     }
 // Method to remove bullet
-removeBullet(bulletSprite) {
+removeBullet(Sprite) {
     this.bullets = this.bullets.filter(
-        (bullet) => !bullet.collideWith(bulletSprite));
+        (bullet) => !bullet.collideWith(Sprite));
     }
 //Find index of the colliding bullet in the bullets array
     collideWith(sprite) {
