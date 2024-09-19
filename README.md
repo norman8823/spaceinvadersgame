@@ -75,7 +75,6 @@
 - Add boss hp meter which decreases with every hit
 - Add multiple levels to game for increasing difficulty 
 - Implement laser reload time with power indicator
-- Add event listeners for mouse controls
 - Bonus: Allow user to select different spaceships at home screen
 
 <h4>References:</h4>
