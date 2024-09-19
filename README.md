@@ -1,7 +1,7 @@
 # Space Invaders Style Game
 
 **Summary**
-- Classic space invaders style game where the ojective is to shoot invading aliens as they move down the screen while avoiding enemy fire. The player wins by eliminating all the enemies on the screen. 
+- Classic "Space Invaders" style game where the ojective is to shoot invading aliens as they move down the screen while avoiding enemy fire. The player wins by eliminating all the enemies on the screen. 
 - Player is represented by a spaceship at the bottom of screen (moves only along x axis)
 - Enemies are arranged in rows moving together side to side and downwards toward player while shooting
 - Boss appears after enemy rows are eliminated, player must defeat boss to win the game
