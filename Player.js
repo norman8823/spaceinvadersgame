@@ -87,8 +87,7 @@ export default class Player {  //initialize control flags to track key press
 
     const handleTouchStart = (event) => {
       isTouching = true;
-      touchStartX = event.touches[0].clientX;
-      this.updatePlayerPosition(touchStartX);
+      this.updatePlayerPosition(event.touches[0].clientX);
     };
 
     const handleTouchMove = (event) => {
@@ -107,28 +106,25 @@ export default class Player {  //initialize control flags to track key press
     };
 
     // Add the touch event listeners
-    this.canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-    this.canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-    this.canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
 
     // Prevent default behavior like scrolling or zooming when interacting with the canvas
-    this.canvas.addEventListener('touchmove', function (event) {
+    document.addEventListener('touchmove', function (event) {
       event.preventDefault();
     }, { passive: false });
   }
 
   updatePlayerPosition(touchX) {
-    const canvasRect = this.canvas.getBoundingClientRect();
-    const relativeX = touchX - canvasRect.left;
+    const screenWidth = window.innerWidth;
+    const screenCenterX = screenWidth/2;
     
-    if (relativeX < this.x + this.width / 2) {
+    if (touchX < screenCenterX) {
       this.leftPressed = true;
       this.rightPressed = false;
-    } else if (relativeX > this.x + this.width / 2) {
-      this.rightPressed = true;
-      this.leftPressed = false;
     } else {
-      this.rightPressed = false;
+      this.rightPressed = true;
       this.leftPressed = false;
     }
   }

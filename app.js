@@ -49,7 +49,15 @@ const gameContainer = document.getElementById('gameContainer');
 
 //Event Listenters for desktop
 startButton.addEventListener('click', startGame);
+startButton.addEventListener('touchend', function(event) {
+    event.preventDefault(); // Prevent any default touch behavior
+    startGame();
+});
 restartButton.addEventListener('click', restartGame);
+restartButton.addEventListener('touchend', function(event) {
+    event.preventDefault(); // Prevent any default touch behavior
+    restartGame();
+});
 
 // Mobile game event listeners
 let touchStartX = 0;
@@ -64,6 +72,10 @@ function handleTouchMove(event) {
     touchEndX = event.changedTouches[0].screenX;
 }
 function handleTouchEnd() {
+    if(event.target === restartButton) {
+        return;
+    }
+
     let swipeDistanceX = touchEndX - touchStartX;
 
     if (Math.abs(swipeDistanceX) > minSwipeDistance) {
@@ -86,7 +98,10 @@ function addMobileEventListeners() {
 
     // Prevent default behavior like scrolling or zooming when interacting with the screen
     document.addEventListener('touchstart', function (event) {
-        event.preventDefault();
+        // Only prevent default if the touch is not on the restart button
+        if (event.target !== restartButton) {
+            event.preventDefault();
+        }
     }, { passive: false });
 }
 
@@ -193,6 +208,7 @@ function restartGame() {
     didWin = false;
     gameOverSoundPlayed = false;
     bossController = null;
+    isGameStarted = true;
 
     // Reinitialize game objects
     player.x = canvas.width / 2;
@@ -203,7 +219,16 @@ function restartGame() {
     enemyBulletController.bullets = [];
 
     // Reset enemy controller and recreate enemies
-    enemyController.reset();
+    enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController);
+
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Force a redraw of the game
+    requestAnimationFrame(game);
+
+    console.log("Game restarted"); // Debug log
+
 }
 //Start game loop by calling the game function at 60FPS (1000/60 ms per frame)
 setInterval(game, 1000/60)
