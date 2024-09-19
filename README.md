@@ -1,4 +1,4 @@
-# Space Invaders Game
+# Space Invaders Style Game
 
 **Summary**
 - Classic space invaders style game where the ojective is to shoot invading aliens as they move down the screen while avoiding enemy fire. The player wins by eliminating all the enemies on the screen. 
