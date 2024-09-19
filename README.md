@@ -79,12 +79,12 @@
 - Bonus: Allow user to select different spaceships at home screen
 
 <h4>References:</h4>
-https://dev.to/codingwithadam/coding-space-invaders-in-javascript-complete-tutorial-every-step-explained-with-html5-canvas-45ja
-https://codeheir.com/2019/03/17/how-to-code-space-invaders-1978-7/
-https://betterprogramming.pub/create-the-classic-space-invaders-game-af087786d63b
-https://codepen.io/tallulahh/pen/OJRdNOL
 https://gamefromscratch.com/gamedev-math-recipes-collision-detection-using-an-axis-aligned-bounding-box/
 https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 https://www.freecodecamp.org/news/learn-javascript-game-development-full-course/
 https://opengameart.org/
 https://pixabay.com/sound-effects/search/game/
+https://dev.to/codingwithadam/coding-space-invaders-in-javascript-complete-tutorial-every-step-explained-with-html5-canvas-45ja
+https://codeheir.com/2019/03/17/how-to-code-space-invaders-1978-7/
+https://betterprogramming.pub/create-the-classic-space-invaders-game-af087786d63b
+https://codepen.io/tallulahh/pen/OJRdNOL
