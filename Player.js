@@ -86,62 +86,59 @@ export default class Player {  //initialize control flags to track key press
     let isTouching = false;
     let shootInterval;
 
-function addMobileEventListeners() {
+    const handleTouchStart = (event) => {
+      isTouching = true;
+      const touch = event.touches[0];
+      this.updatePlayerPosition(touch.clientX);
+      
+      // Start continuous shooting
+      this.shoot();
+      shootInterval = setInterval(() => this.shoot(), 100); // Adjust the interval as needed
+    };
+
+    const handleTouchMove = (event) => {
+      if (isTouching) {
+        const touch = event.touches[0];
+        this.updatePlayerPosition(touch.clientX);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isTouching = false;
+      this.rightPressed = false;
+      this.leftPressed = false;
+      
+      // Stop continuous shooting
+      clearInterval(shootInterval);
+    };
+
     document.addEventListener('touchstart', handleTouchStart, { passive: false });
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd, { passive: false });
 
     // Prevent default behavior like scrolling or zooming when interacting with the screen
-    document.addEventListener('touchstart', function (event) {
-        // Only prevent default if the touch is not on the restart button
-        if (event.target !== restartButton) {
-            event.preventDefault();
-        }
+    document.addEventListener('touchstart', (event) => {
+      // Only prevent default if the touch is not on the restart button
+      if (event.target.id !== 'restartButton') {
+        event.preventDefault();
+      }
     }, { passive: false });
-}
+  }
 
-function handleTouchStart(event) {
-    isTouching = true;
-    const touch = event.touches[0];
-    updatePlayerPosition(touch.clientX);
-    
-    // Start continuous shooting
-    shoot();
-    shootInterval = setInterval(shoot, 100); // Adjust the interval as needed
-}
-
-function handleTouchMove(event) {
-    if (isTouching) {
-        const touch = event.touches[0];
-        updatePlayerPosition(touch.clientX);
-    }
-}
-
-function handleTouchEnd(event) {
-    isTouching = false;
-    Player.rightPressed = false;
-    Player.leftPressed = false;
-    
-    // Stop continuous shooting
-    clearInterval(shootInterval);
-}
-
-function updatePlayerPosition(touchX) {
+  updatePlayerPosition(touchX) {
     const screenWidth = window.innerWidth;
     const screenCenterX = screenWidth / 2;
 
     if (touchX < screenCenterX) {
-        Player.leftPressed = true;
-        Player.rightPressed = false;
+      this.leftPressed = true;
+      this.rightPressed = false;
     } else {
-        Player.rightPressed = true;
-        Player.leftPressed = false;
+      this.rightPressed = true;
+      this.leftPressed = false;
     }
   }
-function shoot() {
-    if (!isGameOver && isGameStarted) {
-        playerBulletController.shoot(player.x + player.width / 2, Player.y, 4, 10);
-    }
-  }
+
+  shoot() {
+    this.shootPressed = true;
   }
 }
