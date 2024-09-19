@@ -13,6 +13,7 @@ export default class BossController {
         this.bossDeathSound.volume = 1 //full volume
         this.bossEnterSound = new Audio('./files/sounds/boss-enter.ogg');
         this.bossFireSound = new Audio('./files/sounds/boss-fire.wav'); // Custom firing sound for the boss
+        this.bossFireSound.volume = .8
         this.bossMusic = new Audio('./files/sounds/boss-theme.mp3'); // Boss background music
         this.bossMusic.volume = .25
         this.bossWidth = 160
@@ -145,7 +146,7 @@ export default class BossController {
     // Method to generate a random firing interval
     getRandomFireInterval() {
         const minFireRate = 10;  // Minimum time between shots (in frames)
-        const maxFireRate = 60; // Maximum time between shots (in frames)
+        const maxFireRate = 50; // Maximum time between shots (in frames)
         return Math.floor(Math.random() * (maxFireRate - minFireRate + 1)) + minFireRate;
     }
  // Method for boss bullet firing logic

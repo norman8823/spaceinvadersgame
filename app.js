@@ -10,8 +10,8 @@ let bossController = null; //initialize variable name with camelCase
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d")
 
-canvas.width = 600;
-canvas.height = 600;
+canvas.width = 600
+canvas.height = 600
 
 //create a new image object for the background and reference source file
 const background = new Image(); 
@@ -78,6 +78,8 @@ function startGame() {
     gameStartSound.play();
     homeScreen.style.display = 'none';  //Hide the home screen
     gameContainer.style.display = 'block';  //Show the game container
+    const canvas = document.querySelector("canvas");  // Get the canvas
+    canvas.style.display = "block";  // Show the canvas
     isGameStarted = true;   //Set the game started flag to true
 }
 
@@ -109,12 +111,15 @@ function displayGameOver(){
 
 //Check if game has ended
 function checkGameOver(){
-    if(isGameOver) return;
-    //if no enemies are left, initialize the boss
-    if (enemyController.enemyRows.length === 0 && !bossController) {
+    if(isGameOver) {
+    if (bossController && bossController.bossMusic) {
+        bossController.bossMusic.pause();
+    }
+    return;
+    }
+    if (enemyController.enemyRows.length === 0 && !bossController) {   //if no enemies are left, initialize the boss
         bossController = new BossController(canvas, enemyBulletController, playerBulletController); // Initialize bossController
     } 
-
     //Check if player collided with boss
     if (bossController && bossController.bossObject.collideWith(player)) {
         isGameOver = true;
@@ -161,4 +166,5 @@ function restartGame() {
 }
 //Start game loop by calling the game function at 60FPS (1000/60 ms per frame)
 setInterval(game, 1000/60)
+
 

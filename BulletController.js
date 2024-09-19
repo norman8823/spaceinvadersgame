@@ -4,7 +4,7 @@ import Bullet from "./Bullet.js"
 // Export the BulletController class so it can be used in other files
 export default class BulletController {
     bullets = [] //declare the array to store the bullets
-    timeTillNextBulletAllowed = 0; //timer that controls how often bullets can be fired
+    timeTillNextBulletAllowed = 100; //timer that controls how often bullets can be fired
     
     //Initialize new BulletController object
     constructor(canvas,maxBulletsAtATime, bulletColor, soundEnabled, shootSoundSrc){
@@ -15,7 +15,7 @@ export default class BulletController {
         
         if (soundEnabled) {
         this.shootSound = new Audio(shootSoundSrc) // Create a new Audio object for the shooting sound effect
-        this.shootSound.volume = .25;    // Set the volume of the shooting sound effect
+        this.shootSound.volume = .20;    // Set the volume of the shooting sound effect
     }
 }
   // Method to update and draw all bullets managed by this controller
@@ -58,7 +58,7 @@ removeBullet(Sprite) {
         }
         this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
         }
-        console.log('Enemy shooting sound should play now');
+    
 
     }
 }
