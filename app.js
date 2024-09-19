@@ -53,8 +53,8 @@ startButton.addEventListener('touchend', function(event) {
     event.preventDefault(); // Prevent any default touch behavior
     startGame();
 });
-restartButton.addEventListener('click', restartGame);
-restartButton.addEventListener('touchend', function(event) {
+document.getElementById('restartButton').addEventListener('click', restartGame);
+document.getElementById('restartButton').addEventListener('touchend', function(event) {
     event.preventDefault(); // Prevent any default touch behavior
     restartGame();
 });
@@ -159,9 +159,9 @@ function displayGameOver(){
         const xPosition = (canvas.width - textWidth) / 2;
         const yPosition = canvas.height / 2;
         ctx.fillText(text, xPosition, yPosition);
-        restartButton.style.display = 'block';
+        document.getElementById('restartButton').style.display = 'block';
         const buttonTop = yPosition + 30;
-        restartButton.style.top = `${buttonTop}px`;
+        document.getElementById('restartButton').style.top = `${buttonTop}px`;      
     }
 }
 
@@ -198,10 +198,15 @@ function checkGameOver(){
     }
 }
 
+function gameLoop() {
+    game();
+    requestAnimationFrame(gameLoop);
+}
+
 // Function to restart the game
 function restartGame() {
     // Hide the restart button
-    restartButton.style.display = 'none';
+    document.getElementById('restartButton').style.display = 'none';
 
     // Reset game state variables
     isGameOver = false;
@@ -213,24 +218,23 @@ function restartGame() {
     // Reinitialize game objects
     player.x = canvas.width / 2;
     player.y = canvas.height - 75;
+    player.rightPressed = false;
+    player.leftPressed = false;
+    player.shootPressed = false;
 
     // Clear bullets from controllers
     playerBulletController.bullets = [];
     enemyBulletController.bullets = [];
 
     // Reset enemy controller and recreate enemies
-    enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController);
+    enemyController.reset();
 
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Force a redraw of the game
-    requestAnimationFrame(game);
 
     console.log("Game restarted"); // Debug log
-
 }
-//Start game loop by calling the game function at 60FPS (1000/60 ms per frame)
-setInterval(game, 1000/60)
 
-
+// Start the initial game loop
+gameLoop();
