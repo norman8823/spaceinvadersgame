@@ -110,21 +110,36 @@ function addMobileEventListeners() {
 function game() {
     if (!isGameStarted) return; // Do nothing if the game hasn't started
     
-    checkGameOver(); //check if game is over
-    ctx.drawImage(background,0,0, canvas.width, canvas.height); //effectively clears the canvas
+    checkGameOver();
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     
-    if(!isGameOver){
-    enemyController.draw(ctx); //draw enemies
-    player.draw(ctx);          //draw player
-    playerBulletController.draw(ctx);  //draw player bullets
-    enemyBulletController.draw(ctx);   //draw enemy bullets
+    if (!isGameOver) {
+        if (enemyController.enemyRows.length > 0) {
+            enemyController.draw(ctx);
+        } else if (!bossController) {
+            console.log("Initializing boss...");
+            try {
+                bossController = new BossController(canvas, enemyBulletController, playerBulletController);
+                console.log("Boss initialized successfully");
+            } catch (error) {
+                console.error("Error initializing boss:", error);
+            }
+        }
+        
+        player.draw(ctx);
+        playerBulletController.draw(ctx);
+        enemyBulletController.draw(ctx);
 
-    if (bossController) {
-        bossController.draw(ctx); // Draw and manage boss
+        if (bossController) {
+            try {
+                bossController.draw(ctx);
+            } catch (error) {
+                console.error("Error drawing boss:", error);
+            }
+        }
     }
     
-}
-displayGameOver();
+    displayGameOver();
 }
 
 //Start the game when the "Start Game" button is clicked

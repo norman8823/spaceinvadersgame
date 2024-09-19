@@ -35,6 +35,7 @@ export default class EnemyController {
   }
   //Method to update and draw enemies on each frame
   draw(ctx) {
+    if (this.enemyRows.length === 0) return;
     this.decrementMoveDownTimer(); 
     this.updateVelocityAndDirection(); 
     this.collisionDetection()
@@ -67,6 +68,7 @@ export default class EnemyController {
   }
   //Method for enemy bullet firing logic
   fireBullet(){
+    if (this.enemyRows.length === 0) return;
     this.fireBulletTimer--; //Decrement the bullet firing timer
     if(this.fireBulletTimer <=0) {
       this.fireBulletTimer = this.fireBulletTimerDefault;
@@ -74,7 +76,6 @@ export default class EnemyController {
       const enemyIndex = Math.floor(Math.random() * allEnemies.length); //fire bullet from random enemy 
       const enemy = allEnemies[enemyIndex];
       this.enemyBulletController.shoot(enemy.x + enemy.width/2-2.5,enemy.y,-3); //enemy fires bullet
-      console.log(enemyIndex);
     }
   }
   //reset move down timer if it reaches zero

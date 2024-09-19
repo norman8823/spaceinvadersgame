@@ -9,7 +9,7 @@ export default class Boss {
       this.image = new Image(); //create new image object 
       this.image.src = `./files/images/CatBoss.png`; //set source of image
       this.bossHitSound = new Audio('./files/sounds/Meow.ogg');
-      this.bossDeathSound = new Audio('./files/sounds/boss-death.ogg');
+      this.bossDeathSound = new Audio('./files/sounds/boss-death.mp3');
     }
 
 draw(ctx) { //draw boss on canvas
