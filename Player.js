@@ -21,6 +21,9 @@ export default class Player {  //initialize control flags to track key press
     //Event listeners for keydown and keyup events
     document.addEventListener("keydown", this.keydown);
     document.addEventListener("keyup", this.keyup);
+
+    //Mobile event listeners
+    this.addMobileEventListeners();
   }
 
   draw(ctx) {
@@ -78,4 +81,65 @@ export default class Player {  //initialize control flags to track key press
         this.shootPressed = false;
     }
   };
+  addMobileEventListeners() {
+    let touchStartX = 0;
+    let isTouching = false;
+
+    const handleTouchStart = (event) => {
+      isTouching = true;
+      touchStartX = event.touches[0].clientX;
+      this.updatePlayerPosition(touchStartX);
+    };
+
+    const handleTouchMove = (event) => {
+      if (isTouching) {
+        const touchX = event.touches[0].clientX;
+        this.updatePlayerPosition(touchX);
+      }
+      event.preventDefault(); // Prevent scrolling
+    };
+
+    const handleTouchEnd = () => {
+      isTouching = false;
+      this.rightPressed = false;
+      this.leftPressed = false;
+      this.shoot(); // Shoot when touch ends
+    };
+
+    // Add the touch event listeners
+    this.canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    this.canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    this.canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+    // Prevent default behavior like scrolling or zooming when interacting with the canvas
+    this.canvas.addEventListener('touchmove', function (event) {
+      event.preventDefault();
+    }, { passive: false });
+  }
+
+  updatePlayerPosition(touchX) {
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const relativeX = touchX - canvasRect.left;
+    
+    if (relativeX < this.x + this.width / 2) {
+      this.leftPressed = true;
+      this.rightPressed = false;
+    } else if (relativeX > this.x + this.width / 2) {
+      this.rightPressed = true;
+      this.leftPressed = false;
+    } else {
+      this.rightPressed = false;
+      this.leftPressed = false;
+    }
+  }
+
+  shoot() {
+    this.bulletController.shoot(
+      this.x + this.width / 2,
+      this.y,
+      4,  // bullet velocity
+      10  // time until next bullet
+    );
+  }
 }
+

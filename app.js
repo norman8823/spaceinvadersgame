@@ -47,9 +47,49 @@ const restartButton = document.getElementById('restartButton');
 const homeScreen = document.getElementById('homeScreen');
 const gameContainer = document.getElementById('gameContainer');
 
-//Event Listenters
+//Event Listenters for desktop
 startButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', restartGame);
+
+// Mobile game event listeners
+let touchStartX = 0;
+let touchEndX = 0;
+const minSwipeDistance = 30;  // Minimum distance for swipe to register
+
+// Swipe handling for player movement
+function handleTouchStart(event) {
+    touchStartX = event.changedTouches[0].screenX;
+}
+function handleTouchMove(event) {
+    touchEndX = event.changedTouches[0].screenX;
+}
+function handleTouchEnd() {
+    let swipeDistanceX = touchEndX - touchStartX;
+
+    if (Math.abs(swipeDistanceX) > minSwipeDistance) {
+        if (swipeDistanceX < 0) {
+            player.moveLeft();  // Move player left
+        } else {
+            player.moveRight();  // Move player right
+        }
+    } else {
+        // Treat as a tap to fire
+        playerBulletController.shoot(); // Fire bullet
+    }
+}
+
+// Add the touch event listeners for swipe and tap
+function addMobileEventListeners() {
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+    // Prevent default behavior like scrolling or zooming when interacting with the screen
+    document.addEventListener('touchstart', function (event) {
+        event.preventDefault();
+    }, { passive: false });
+}
+
 
 //Main game function that updates the game state
 function game() {
@@ -81,6 +121,7 @@ function startGame() {
     const canvas = document.querySelector("canvas");  // Get the canvas
     canvas.style.display = "block";  // Show the canvas
     isGameStarted = true;   //Set the game started flag to true
+    addMobileEventListeners(); // Activate swipe and tap controls for mobile gaming
 }
 
 //Detect "Game Over" or "You Win" depending on outcome
